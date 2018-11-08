@@ -4,54 +4,69 @@ import gvsig
 import pdb
 from gvsig import geom
 from gvsig import commonsdialog
-from gvsig.libs.toolbox import ToolboxProcess, NUMERICAL_VALUE_DOUBLE,SHAPE_TYPE_POLYGON,NUMERICAL_VALUE_INTEGER,SHAPE_TYPE_POLYGON, SHAPE_TYPE_POINT
+from gvsig.libs.toolbox import ToolboxProcess, NUMERICAL_VALUE_DOUBLE,SHAPE_TYPE_POLYGON,NUMERICAL_VALUE_INTEGER,SHAPE_TYPE_POLYGON, SHAPE_TYPE_POINT, SHAPE_TYPE_MIXED
 from es.unex.sextante.gui import core
 from es.unex.sextante.gui.core import NameAndIcon
-
+from es.unex.sextante.additionalInfo import AdditionalInfoVectorLayer
 from es.unex.sextante.gui.core import SextanteGUI
 from org.gvsig.geoprocess.lib.api import GeoProcessLocator
 
-from addons.PointDensityGrid import pointDensityGrid
-reload(pointDensityGrid)
 
-from addons.PointDensityGrid.pdglib.hexa_grid import pointDensityGrid_hexa
-from addons.PointDensityGrid.pdglib.square_grid import pointDensityGrid_square
-from addons.PointDensityGrid.pointDensityGrid import pointDensityGridCreation
-from addons.PointDensityGrid.pointDensityGrid import GRID_HEXAGON_HORIZONTAL,GRID_HEXAGON_VERTICAL,GRID_SQUARE
+
+from addons.AoristicClockGrid.aoristicClockGrid import aoristicClockGrid
+
+from org.gvsig.tools import ToolsLocator
 
 class AoristicClockGridGeoprocess(ToolboxProcess):
   def defineCharacteristics(self):
-      self.setName("_Point_density_grid_geoprocess_name")
-      self.setGroup("_Criminology_group")
-      self.setUserCanDefineAnalysisExtent(False)
-      params = self.getParameters()
-      params.addInputVectorLayer("LAYER","_Input_layer", SHAPE_TYPE_POINT, True)
-      params.addNumericalValue("DISTANCEGRID", "_Grid_distance",0, NUMERICAL_VALUE_DOUBLE)
-      params.addSelection("GRIDTYPE", "_Grid_type", 
-                          [GRID_HEXAGON_HORIZONTAL, 
-                           GRID_HEXAGON_VERTICAL,
-                           GRID_SQUARE]);
-      params.addBoolean("ADDEMPTYGRID", "_Add_empty_grids", True)
-      params.addString("EXPRESSION", "_Value_expression")
-      self.addOutputVectorLayer("RESULT_POLYGON", "DensityGrid", SHAPE_TYPE_POLYGON)
+    self.setName("_Aoristic_clock_grid_name")
+    self.setGroup("_Criminology_group")
+    self.setUserCanDefineAnalysisExtent(False)
+    params = self.getParameters()
+    i18nManager = ToolsLocator.getI18nManager()
+    params.addInputVectorLayer("LAYER",i18nManager.getTranslation("_Input_layer"), AdditionalInfoVectorLayer.SHAPE_TYPE_ANY, True)
+    params.addNumericalValue("PROPORTIONX", i18nManager.getTranslation("_Proportion_X"),0, NUMERICAL_VALUE_DOUBLE)
+    params.addNumericalValue("PROPORTIONY", i18nManager.getTranslation("_Proportion_Y"),0, NUMERICAL_VALUE_DOUBLE)
+    params.addTableField("FIELDHOUR", i18nManager.getTranslation("_Field_hour"), "LAYER", True)
+    params.addSelection("PATTERNHOUR", i18nManager.getTranslation("_Pattern_hour"),['%H:%M:%S'])
+    
+    params.addTableField("FIELDDAY", i18nManager.getTranslation("_Field_day"), "LAYER", True)
+    params.addSelection("PATTERNDAY", i18nManager.getTranslation("_Pattern_day"),['%Y-%m-%d'])
+    
+    #params.addBoolean("ADDEMPTYGRID", "_Add_empty_grids", True)
+    #params.addString("EXPRESSION", "_Value_expression")
+    #self.addOutputVectorLayer("RESULT_POLYGON", "DensityGrid", SHAPE_TYPE_POLYGON)
       
   def processAlgorithm(self):
         features=None
         params = self.getParameters()
         sextantelayer = params.getParameterValueAsVectorLayer("LAYER")
-        distancegrid = params.getParameterValueAsDouble("DISTANCEGRID")
-        gridType = params.getParameterValueAsString("GRIDTYPE")
-        addEmptyGrids = params.getParameterValueAsBoolean("ADDEMPTYGRID")
-        valueExpression = params.getParameterValueAsString("EXPRESSION")
-
+        proportionX = params.getParameterValueAsDouble("PROPORTIONX")
+        proportionY = params.getParameterValueAsDouble("PROPORTIONY")
+        
+        nameFieldHour = params.getParameterValueAsInt("FIELDHOUR")
+        nameFieldDay =  params.getParameterValueAsInt("FIELDDAY")
+        
+        patternHour = params.getParameterValueAsString("PATTERNHOUR")
+        patternDay =  params.getParameterValueAsString("PATTERNDAY")
+        
         store = sextantelayer.getFeatureStore()
-        projection = sextantelayer.getCRS()
 
-        pointDensityGridCreation(self, store, gridType, distancegrid, addEmptyGrids, projection)
+        #pointDensityGridCreation(self, store, gridType, distancegrid, addEmptyGrids, projection)
+        aoristicClockGrid(store,
+                      proportionX,
+                      proportionY,
+                      nameFieldHour,
+                      nameFieldDay,
+                      patternHour,
+                      patternDay,
+                      0,
+                      0,
+                      self)
         print "Proceso terminado %s" % self.getCommandLineName()
         return True
         
 def main(*args):
-        process = PointDensityGridGeoprocess()
+        process = AoristicClockGridGeoprocess()
         process.selfregister("Scripting")
         process.updateToolbox()

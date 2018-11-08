@@ -8,7 +8,7 @@ from org.gvsig.symbology.fmap.mapcontext.rendering.legend.impl import SingleSymb
 from java.awt import Color
 from org.gvsig.symbology.swing import SymbologySwingLocator
 from org.gvsig.fmap.mapcontext import MapContextLocator
-
+from org.gvsig.tools import ToolsLocator
 
 def main(*args):
   proportionX = 1
@@ -19,7 +19,9 @@ def main(*args):
   patternDay = '%Y-%m-%d'
   xi = 0
   yi = 0
-  aoristicClockGrid(proportionX,
+  store = gvsig.currentLayer().getFeatureStore()
+  aoristicClockGrid(store,
+                      proportionX,
                       proportionY,
                       nameFieldHour,
                       nameFieldDay,
@@ -28,31 +30,44 @@ def main(*args):
                       0,
                       0)
   
-def aoristicClockGrid(proportionX,
+def aoristicClockGrid(store,
+                      proportionX,
                       proportionY,
                       nameFieldHour,
                       nameFieldDay,
                       patternHour,
                       patternDay,
                       xi=0,
-                      yi=0):
+                      yi=0,
+                      selfStatus=None):
 
   baseLines = createBaseLayers(proportionX, proportionY)
   
   
   # Setting coordinates to aoristic clock
   
-  layer = gvsig.currentLayer()
+  #layer = gvsig.currentLayer()
     
   # New points layer
-  schema = gvsig.createFeatureType(layer.getFeatureStore().getDefaultFeatureType()) # DefaultFeatureType
+  schema = gvsig.createFeatureType(store.getDefaultFeatureType()) # DefaultFeatureType
   newPoints = gvsig.createShape(schema)
 
   # Transform
-  set = layer.getFeatureStore().getFeatureSet()
+  set = store.getFeatureSet()
   newPoints.edit()
   store = newPoints.getFeatureStore()
+  size = set.getSize()
+  selfStatus.setRangeOfValues(0,size)
+  n = 0
+  i18nManager = ToolsLocator.getI18nManager()
+  processText = i18nManager.getTranslation("_Processing")
   for f in set:
+    selfStatus.next()
+    n+=1
+    selfStatus.setProgressText(processText + ": " + str(n)+" / "+str(int(size)))
+    if selfStatus.isCanceled() == True:
+      newPoints.finishEditing()
+      return True
     fieldHour = f.get(nameFieldHour)
     d = datetime.datetime.strptime(fieldHour, patternHour).time()
     totalSecs = float(d.minute*60 + d.second)/3600
@@ -71,14 +86,17 @@ def aoristicClockGrid(proportionX,
   gvsig.currentView().addLayer(newPoints)
   
   mp = MapContextLocator.getMapContextManager()
-  leg = mp.createLegend("HeatmapLegend")
-  leg.setROI(baseLines.getFullEnvelope().getGeometry())
-  leg.setUseFixedViz(False)
-  leg.setCorrectionFixedViz(100)
-  leg.setDistance(30)
-  colorTables = SymbologySwingLocator.getSwingManager().createColorTables().get(5)
-  leg.setColorTable(colorTables.getColors())
-  newPoints.setLegend(leg)
+  try:
+    leg = mp.createLegend("HeatmapLegend")
+    leg.setROI(baseLines.getFullEnvelope().getGeometry())
+    leg.setUseFixedViz(False)
+    leg.setCorrectionFixedViz(100)
+    leg.setDistance(30)
+    colorTables = SymbologySwingLocator.getSwingManager().createColorTables().get(5)
+    leg.setColorTable(colorTables.getColors())
+    newPoints.setLegend(leg)
+  except:
+    pass
   newPoints.setName("Ao-Data")
   
 def createBaseLayers( proportionX = 1, proportionY = 1):
@@ -148,7 +166,7 @@ def createBaseLayers( proportionX = 1, proportionY = 1):
   basePoints.commit()
   basePoints.setName("Ao-Label")
   baseLines.commit()
-  baseLines.setName("Ao-Grid"
+  baseLines.setName("Ao-Grid")
   
   # Labels and legends
   ds = LabelingFactory().createDefaultStrategy(basePoints)
