@@ -33,10 +33,6 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
     params.addTableField("FIELDDAY", i18nManager.getTranslation("_Field_day"), "LAYER", True)
     params.addSelection("PATTERNDAY", i18nManager.getTranslation("_Pattern_day"),['%Y-%m-%d'])
     
-    #params.addBoolean("ADDEMPTYGRID", "_Add_empty_grids", True)
-    #params.addString("EXPRESSION", "_Value_expression")
-    #self.addOutputVectorLayer("RESULT_POLYGON", "DensityGrid", SHAPE_TYPE_POLYGON)
-      
   def processAlgorithm(self):
         features=None
         params = self.getParameters()
@@ -52,7 +48,6 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
         
         store = sextantelayer.getFeatureStore()
 
-        #pointDensityGridCreation(self, store, gridType, distancegrid, addEmptyGrids, projection)
         aoristicClockGrid(store,
                       proportionX,
                       proportionY,
