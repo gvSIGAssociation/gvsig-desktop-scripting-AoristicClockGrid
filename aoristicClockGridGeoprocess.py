@@ -10,11 +10,7 @@ from es.unex.sextante.gui.core import NameAndIcon
 from es.unex.sextante.additionalInfo import AdditionalInfoVectorLayer
 from es.unex.sextante.gui.core import SextanteGUI
 from org.gvsig.geoprocess.lib.api import GeoProcessLocator
-
-
-
 from addons.AoristicClockGrid.aoristicClockGrid import aoristicClockGrid
-
 from org.gvsig.tools import ToolsLocator
 from org.gvsig.andami import PluginsLocator
 import os
@@ -43,11 +39,12 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
         return File(helpPath)
     return None
   def defineCharacteristics(self):
-    self.setName("_Aoristic_clock_grid_name")
-    self.setGroup("_Criminology_group")
+    i18nManager = ToolsLocator.getI18nManager()
+    self.setName(i18nManager.getTranslation("_Aoristic_clock_grid_name"))
+    self.setGroup(i18nManager.getTranslation("_Criminology_group"))
+
     self.setUserCanDefineAnalysisExtent(False)
     params = self.getParameters()
-    i18nManager = ToolsLocator.getI18nManager()
     params.addInputVectorLayer("LAYER",i18nManager.getTranslation("_Input_layer"), AdditionalInfoVectorLayer.SHAPE_TYPE_ANY, True)
     params.addNumericalValue("PROPORTIONX", i18nManager.getTranslation("_Proportion_X"),0, NUMERICAL_VALUE_DOUBLE)
     params.addNumericalValue("PROPORTIONY", i18nManager.getTranslation("_Proportion_Y"),0, NUMERICAL_VALUE_DOUBLE)
