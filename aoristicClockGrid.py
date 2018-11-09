@@ -57,17 +57,18 @@ def aoristicClockGrid(store,
   newPoints.edit()
   store = newPoints.getFeatureStore()
   size = set.getSize()
-  selfStatus.setRangeOfValues(0,size)
+  if selfStatus!=None: selfStatus.setRangeOfValues(0,size)
   n = 0
   i18nManager = ToolsLocator.getI18nManager()
   processText = i18nManager.getTranslation("_Processing")
   for f in set:
     selfStatus.next()
     n+=1
-    selfStatus.setProgressText(processText + ": " + str(n)+" / "+str(int(size)))
-    if selfStatus.isCanceled() == True:
-      newPoints.finishEditing()
-      return True
+    if selfStatus!=None: 
+      selfStatus.setProgressText(processText + ": " + str(n)+" / "+str(int(size)))
+      if selfStatus.isCanceled() == True:
+        newPoints.finishEditing()
+        return True
     fieldHour = f.get(nameFieldHour)
     d = datetime.datetime.strptime(fieldHour, patternHour).time()
     totalSecs = float(d.minute*60 + d.second)/3600
@@ -111,13 +112,14 @@ def createBaseLayers( proportionX = 1, proportionY = 1):
   schema.append("GEOMETRY", "GEOMETRY")
   schema.get("GEOMETRY").setGeometryType(geom.POINT, geom.D2)
   basePoints = gvsig.createShape(schema)
-  days = {0:"Monday",
-          1:"Tuesday",
-          2:"Wednesday",
-          3:"Thursday",
-          4:"Friday",
-          5:"Saturday",
-          6:"Sunday"
+  i18nManager = ToolsLocator.getI18nManager()
+  days = {0:i18nManager.getTranslation("_Monday"),
+          1:i18nManager.getTranslation("_Tuesday"),
+          2:i18nManager.getTranslation("_Wednesday"),
+          3:i18nManager.getTranslation("_Thursday"),
+          4:i18nManager.getTranslation("_Friday"),
+          5:i18nManager.getTranslation("_Saturday"),
+          6:i18nManager.getTranslation("_Sunday")
           }
 
   # Y axis: Days
