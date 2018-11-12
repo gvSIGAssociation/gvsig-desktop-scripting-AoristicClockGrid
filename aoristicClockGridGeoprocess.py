@@ -1,4 +1,7 @@
 # encoding: utf-8
+from gvsig.uselib import use_plugin
+use_plugin("org.gvsig.toolbox")
+use_plugin("org.gvsig.geoprocess.app.mainplugin")
 
 import gvsig
 import pdb
@@ -49,10 +52,11 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
     params.addNumericalValue("PROPORTIONX", i18nManager.getTranslation("_Proportion_X"),0, NUMERICAL_VALUE_DOUBLE)
     params.addNumericalValue("PROPORTIONY", i18nManager.getTranslation("_Proportion_Y"),0, NUMERICAL_VALUE_DOUBLE)
     params.addTableField("FIELDHOUR", i18nManager.getTranslation("_Field_hour"), "LAYER", True)
-    params.addSelection("PATTERNHOUR", i18nManager.getTranslation("_Pattern_hour"),['%H:%M:%S'])
+    params.addString("PATTERNHOUR", i18nManager.getTranslation("_Pattern_hour"))
     
     params.addTableField("FIELDDAY", i18nManager.getTranslation("_Field_day"), "LAYER", True)
-    params.addSelection("PATTERNDAY", i18nManager.getTranslation("_Pattern_day"),['%Y-%m-%d'])
+    params.addString("PATTERNDAY", i18nManager.getTranslation("_Pattern_day"))
+    params.addString("FILTEREXPRESSION",i18nManager.getTranslation("_Filter_expression"))
     
   def processAlgorithm(self):
         features=None
@@ -66,7 +70,7 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
         
         patternHour = params.getParameterValueAsString("PATTERNHOUR")
         patternDay =  params.getParameterValueAsString("PATTERNDAY")
-        
+        expression = params.getParameterValueAsString("FILTEREXPRESSION")
         store = sextantelayer.getFeatureStore()
 
         aoristicClockGrid(store,
@@ -76,6 +80,7 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
                       nameFieldDay,
                       patternHour,
                       patternDay,
+                      expression,
                       0,
                       0,
                       self)
