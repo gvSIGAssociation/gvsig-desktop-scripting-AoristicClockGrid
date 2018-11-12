@@ -64,16 +64,33 @@ def aoristicClockGrid(store,
   ##
   ## TRANSFROM TO DATE COORDINATES FOR GRID
   ##
-  set = store.getFeatureSet()
+  #if store.getSelection().getSize()==0:
+  #  fs = store.getFeatureSet(fq)
+  #else:
+  #  fs = store.getSelection()
+  if store.getSelection().getSize()!=0:
+    fset = store.getSelection()
+  elif expression != '':
+    expressionEvaluatorManager = ExpressionEvaluatorLocator.getManager()
+    try:
+      evaluator = expressionEvaluatorManager.createEvaluator(expression)
+      fq = store.createFeatureQuery()
+      fq.addFilter(evaluator)
+      fset = store.getFeatureSet(fq)
+    except:
+      fset = store.getFeatureSet()
+  else:
+    fset = store.getFeatureSet()
+  #set = store.getFeatureSet()
   
   newPoints.edit()
   store = newPoints.getFeatureStore()
-  size = set.getSize()
+  size = fset.getSize()
   if selfStatus!=None: selfStatus.setRangeOfValues(0,size)
   n = 0
   i18nManager = ToolsLocator.getI18nManager()
   processText = i18nManager.getTranslation("_Processing")
-  for f in set:
+  for f in fset:
     n+=1
     if selfStatus!=None: 
       selfStatus.next()
