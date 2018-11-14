@@ -25,8 +25,14 @@
 
 -->
 	<help>
-		<element name="DESCRIPTION" text="Geoproceso para la transformacion de campos tipo Integer con fechas en forma yyyymmdd para su transformacion a un campo nuevo de tipo Date. Valores default como por ejemplo '99999999' puedes reemplazarse por una fecha introducida en el formato anterior. Por ejemplo: '19991231'" description="Descripcion" type="0">
+		<element name="DESCRIPTION" text="Geoproceso para la creacion de una grafica (en forma de grid) en el que aparecera representada la distribucion temporal de los eventos a los que se le ha dotado de geometria en funcion del dia de la semana (coordenada X) y de la hora (coordenada Y) en la que se han producido. Se aplica una leyenda de mapa de calor automaticamente, pero tambien se puede utilizar cualquier otro tipo de leyenda de tipo puntual." description="Descripcion" type="0">
 		</element>
+                <image description="Parametros de la siguiente imagen" file="params.png">
+		</image>
+                <image description="Reloj aoristico (grid)" file="grid.png">
+		</image>
+                <image description="Reloj aoristico (grid) con zoom sobre una franja concreta" file="grid2.png">
+		</image>
 		<element name="ADDITIONAL_INFO" text="" description="Informacion adicional" type="0">
 		</element>
 		<element name="EXTENSION_AUTHOR" text="Oscar Martinez" description="Algoritmo creado por" type="0">
@@ -35,13 +41,20 @@
 		</element>
 		<element name="USER_NOTES" text="" description="Notas de usuario" type="0">
 		</element>
-		<element name="LAYER" text="" description="Capa de entrada" type="3">
+		<element name="LAYER" text="Capa de entrada" description="" type="3">
 		</element>
-		<element name="CHECK" text="" description="Geometrias seleccionadas" type="3">
+		<element name="PROPORTIONX" text="Proporcion del tamaño de la grafica en el eje X" description="" type="3">
 		</element>
-		<element name="OUTPUT_DESCRIPTION" text="" description="Descripcion" type="2">
+                <element name="PROPORTIONY" text="Proporcion del tamaño de la grafica en el eje Y" description="" type="3">
 		</element>
-		<element name="RESULT" text="" description="Date Result" type="2">
+		<element name="FIELDHOUR" text="Campo hora" description="" type="3">
 		</element>
+		<element name="PATTERNHOUR" text="Patron del campo hora, solo en caso de que sea de tipo texto." description="" type="3">
+		</element>
+		<element name="FIELDDAY" text="Campo dia" description="" type="3">
+		</element>
+		<element name="PATTERNDAY" text="Patron del campo dia, solo en caso de que sea de tipo texto" description="" type="3">
+		</element>
+		<element name="FILTEREXPRESSION" text="Expresion de filtrado de la capa de entrada" description="" type="3"></element>
 	</help>
 <?xml version='1.0' encoding='ISO-8859-1' standalone='yes' ?>
