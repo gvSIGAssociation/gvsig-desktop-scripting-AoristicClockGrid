@@ -15,6 +15,7 @@ from java.util import Calendar
 from java.text import SimpleDateFormat
 from gvsig import logger
 from gvsig import LOGGER_WARN,LOGGER_INFO,LOGGER_ERROR
+from org.gvsig.fmap.dal import DALLocator
 
 def main(*args):
   proportionX = 1
@@ -43,8 +44,6 @@ def aoristicClockGrid(store,
                       proportionY,
                       nameFieldHour,
                       nameFieldDay,
-                      patternHour,
-                      patternDay,
                       expression,
                       xi=0,
                       yi=0,
@@ -68,20 +67,20 @@ def aoristicClockGrid(store,
   #  fs = store.getFeatureSet(fq)
   #else:
   #  fs = store.getSelection()
+    ###
+  ### GET VALUES
+  ###
   if store.getSelection().getSize()!=0:
     fset = store.getSelection()
-  elif expression != '':
-    expressionEvaluatorManager = ExpressionEvaluatorLocator.getManager()
-    try:
-      evaluator = expressionEvaluatorManager.createEvaluator(expression)
-      fq = store.createFeatureQuery()
-      fq.addFilter(evaluator)
-      fset = store.getFeatureSet(fq)
-    except:
-      fset = store.getFeatureSet()
+  elif expression.getPhrase() != '':
+    evaluator = DALLocator.getDataManager().createExpresion(expression)
+    #evaluator = expressionEvaluatorManager.createEvaluator(expression)
+    fq = store.createFeatureQuery()
+    fq.addFilter(evaluator)
+    fq.retrievesAllAttributes()
+    fset = store.getFeatureSet(fq)
   else:
     fset = store.getFeatureSet()
-  #set = store.getFeatureSet()
   
   newPoints.edit()
   store = newPoints.getFeatureStore()
@@ -98,8 +97,8 @@ def aoristicClockGrid(store,
       if selfStatus.isCanceled() == True:
         newPoints.finishEditing()
         return True
-    dateFieldHour = getFieldAsDate(f.get(nameFieldHour), patternHour)
-    dateFieldDay = getFieldAsDate(f.get(nameFieldDay), patternDay)
+    dateFieldHour = f.get(nameFieldHour) #getFieldAsDate(f.get(nameFieldHour), patternHour)
+    dateFieldDay = f.get(nameFieldDay) #getFieldAsDate(f.get(nameFieldDay), patternDay)
     newDateGeom = getGeometryFromDayHour(dateFieldDay, dateFieldHour,proportionX, proportionY)
     nf = store.createNewFeature(f)
     nf.setDefaultGeometry(newDateGeom)

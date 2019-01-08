@@ -52,12 +52,12 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
     params.addNumericalValue("PROPORTIONX", i18nManager.getTranslation("_Proportion_X"),0, NUMERICAL_VALUE_DOUBLE)
     params.addNumericalValue("PROPORTIONY", i18nManager.getTranslation("_Proportion_Y"),0, NUMERICAL_VALUE_DOUBLE)
     params.addTableField("FIELDHOUR", i18nManager.getTranslation("_Field_hour"), "LAYER", True)
-    params.addString("PATTERNHOUR", i18nManager.getTranslation("_Pattern_hour"))
+    #params.addString("PATTERNHOUR", i18nManager.getTranslation("_Pattern_hour"))
     
     params.addTableField("FIELDDAY", i18nManager.getTranslation("_Field_day"), "LAYER", True)
-    params.addString("PATTERNDAY", i18nManager.getTranslation("_Pattern_day"))
-    params.addString("FILTEREXPRESSION",i18nManager.getTranslation("_Filter_expression"))
-    
+    #params.addString("PATTERNDAY", i18nManager.getTranslation("_Pattern_day"))
+    params.addTableFilter("FILTEREXPRESSION",i18nManager.getTranslation("_Filter_expression"),"LAYER", True)
+   
   def processAlgorithm(self):
         features=None
         params = self.getParameters()
@@ -65,12 +65,12 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
         proportionX = params.getParameterValueAsDouble("PROPORTIONX")
         proportionY = params.getParameterValueAsDouble("PROPORTIONY")
         
-        nameFieldHour = params.getParameterValueAsInt("FIELDHOUR")
-        nameFieldDay =  params.getParameterValueAsInt("FIELDDAY")
+        nameFieldHour = params.getParameterValueAsString("FIELDHOUR")
+        nameFieldDay =  params.getParameterValueAsString("FIELDDAY")
         
-        patternHour = params.getParameterValueAsString("PATTERNHOUR")
-        patternDay =  params.getParameterValueAsString("PATTERNDAY")
-        expression = params.getParameterValueAsString("FILTEREXPRESSION")
+        #patternHour = params.getParameterValueAsString("PATTERNHOUR")
+        #patternDay =  params.getParameterValueAsString("PATTERNDAY")
+        expression = params.getParameterValueAsObject("FILTEREXPRESSION")
         store = sextantelayer.getFeatureStore()
 
         aoristicClockGrid(store,
@@ -78,8 +78,6 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
                       proportionY,
                       nameFieldHour,
                       nameFieldDay,
-                      patternHour,
-                      patternDay,
                       expression,
                       0,
                       0,
