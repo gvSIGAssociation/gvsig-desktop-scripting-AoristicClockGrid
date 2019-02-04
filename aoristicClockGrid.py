@@ -16,15 +16,19 @@ from java.text import SimpleDateFormat
 from gvsig import logger
 from gvsig import LOGGER_WARN,LOGGER_INFO,LOGGER_ERROR
 from org.gvsig.fmap.dal import DALLocator
+from org.gvsig.expressionevaluator import ExpressionEvaluatorLocator
 
 def main(*args):
   proportionX = 1
   proportionY = 1
-  nameFieldHour = "CMPLNT_F_1"
+  nameFieldHour = "CDATE"
   nameFieldDay = "CMPLNT_FR_"
-  patternHour = 'HH:mm:ss'
-  patternDay = 'yyyy-MM-dd'
-  expression = ''
+  dm = DALLocator.getDataManager()
+  evaluator = dm.createExpresion("campo2<7")
+  exp = ExpressionEvaluatorLocator.getManager().createExpression()
+  exp.setPhrase('')
+  print evaluator
+  expression = exp
   xi = 0
   yi = 0
   store = gvsig.currentLayer().getFeatureStore()
@@ -33,8 +37,6 @@ def main(*args):
                       proportionY,
                       nameFieldHour,
                       nameFieldDay,
-                      patternHour,
-                      patternDay,
                       expression,
                       0,
                       0)
@@ -49,7 +51,6 @@ def aoristicClockGrid(store,
                       yi=0,
                       selfStatus=None):
 
-  baseLines = createBaseLayers(proportionX, proportionY)
   
   
   # Setting coordinates to aoristic clock
@@ -106,6 +107,8 @@ def aoristicClockGrid(store,
   newPoints.commit()
   gvsig.currentView().addLayer(newPoints)
 
+  baseLines = createBaseLayers(proportionX, proportionY)
+
   ###
   ### LEGEND AND LABELS
   ###
@@ -113,17 +116,22 @@ def aoristicClockGrid(store,
   try:
     leg = mp.createLegend("HeatmapLegend")
     leg.setROI(baseLines.getFullEnvelope().getGeometry())
-    leg.setUseFixedViz(False)
-    leg.setCorrectionFixedViz(100)
+    #leg.setUseFixedViz(False)
+    #leg.setCorrectionFixedViz(100)
     leg.setDistance(30)
-    colorTables = SymbologySwingLocator.getSwingManager().createColorTables().get(5)
-    leg.setColorTable(colorTables.getColors())
+    try:
+      colorTables = SymbologySwingLocator.getSwingManager().createColorTables()
+      colorTable = colorTables.get(0)
+      leg.setColorTable(colorTable.getColors())
+    except:
+      leg.setColorTable(100, Color(0, 0, 255, 0), Color(255, 0, 0, 255))
     newPoints.setLegend(leg)
   except:
     ex = sys.exc_info()[1]
     error = "Error" + str(ex.__class__.__name__)+ str(ex)
     logger(error, LOGGER_ERROR)
   newPoints.setName("Ao-Data")
+  
   
 def createBaseLayers( proportionX = 1, proportionY = 1):
 
