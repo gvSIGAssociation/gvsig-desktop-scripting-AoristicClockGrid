@@ -17,14 +17,16 @@ from gvsig import logger
 from gvsig import LOGGER_WARN,LOGGER_INFO,LOGGER_ERROR
 from org.gvsig.fmap.dal import DALLocator
 from org.gvsig.expressionevaluator import ExpressionEvaluatorLocator
+from org.gvsig.fmap.dal.feature import FeatureStore
 
 def main(*args):
   proportionX = 1
   proportionY = 1
   nameFieldHour = "CDATE"
   nameFieldDay = "CMPLNT_FR_"
+  nameFieldHour = "CMPLNT_FR_"
   dm = DALLocator.getDataManager()
-  evaluator = dm.createExpresion("campo2<7")
+  evaluator = dm.createExpresion("")
   exp = ExpressionEvaluatorLocator.getManager().createExpression()
   exp.setPhrase('')
   print evaluator
@@ -82,9 +84,9 @@ def aoristicClockGrid(store,
     fset = store.getFeatureSet(fq)
   else:
     fset = store.getFeatureSet()
-  
-  newPoints.edit()
-  store = newPoints.getFeatureStore()
+    
+  newStore = newPoints.getFeatureStore()
+  newStore.edit(FeatureStore.MODE_APPEND)
   size = fset.getSize()
   if selfStatus!=None: selfStatus.setRangeOfValues(0,size)
   n = 0
@@ -101,10 +103,11 @@ def aoristicClockGrid(store,
     dateFieldHour = f.get(nameFieldHour) #getFieldAsDate(f.get(nameFieldHour), patternHour)
     dateFieldDay = f.get(nameFieldDay) #getFieldAsDate(f.get(nameFieldDay), patternDay)
     newDateGeom = getGeometryFromDayHour(dateFieldDay, dateFieldHour,proportionX, proportionY)
-    nf = store.createNewFeature(f)
+    nf = newStore.createNewFeature(f)
     nf.setDefaultGeometry(newDateGeom)
-    store.insert(nf)
-  newPoints.commit()
+    newStore.insert(nf)
+    
+  newStore.commit()
   gvsig.currentView().addLayer(newPoints)
 
   baseLines = createBaseLayers(proportionX, proportionY)
