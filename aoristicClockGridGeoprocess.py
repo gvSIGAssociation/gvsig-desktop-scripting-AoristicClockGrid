@@ -44,7 +44,7 @@ class AoristicClockGridGeoprocess(ToolboxProcess):
   def defineCharacteristics(self):
     i18nManager = ToolsLocator.getI18nManager()
     self.setName(i18nManager.getTranslation("_Aoristic_clock_grid_name"))
-    self.setGroup(i18nManager.getTranslation("_Criminology_group"))
+    self.setGroup(i18nManager.getTranslation("_Data_Analysis"))
 
     self.setUserCanDefineAnalysisExtent(False)
     params = self.getParameters()
