@@ -25,36 +25,32 @@
 
 -->
 	<help>
-		<element name="DESCRIPTION" text="Geoproceso para la creacion de una grafica (en forma de grid) en el que aparecera representada la distribucion temporal de los eventos a los que se le ha dotado de geometria en funcion del dia de la semana (coordenada X) y de la hora (coordenada Y) en la que se han producido. Se aplica una leyenda de mapa de calor automaticamente, pero tambien se puede utilizar cualquier otro tipo de leyenda de tipo puntual." description="Descripcion" type="0">
+		<element name="DESCRIPTION" text="Geoprocess for the creation of a graph (in the form of a grid) in which the temporal distribution of the events that have been given geometry as a function of the day of the week (coordinate X) and the time (coordinate) will be represented. Y) in which they have occurred. A heat map legend is applied automatically, but any other type of point legend can also be used." description="Descripcion" type="0">
 		</element>
-                <image description="Parametros de la siguiente imagen" file="params.png">
+                <image description="Example parameters" file="params_en.png">
 		</image>
-                <image description="Reloj aoristico (grid)" file="grid.png">
+                <image description="Aoristic clock (grid)" file="grid_en.png">
 		</image>
-                <image description="Reloj aoristico (grid) con zoom sobre una franja concreta" file="grid2.png">
+                <image description="Aoristic clock (grid) with a zoom over a specified zone" file="grid2_en.png">
 		</image>
-		<element name="ADDITIONAL_INFO" text="" description="Informacion adicional" type="0">
+		<element name="ADDITIONAL_INFO" text="" description="Additional info" type="0">
 		</element>
-		<element name="EXTENSION_AUTHOR" text="Oscar Martinez" description="Algoritmo creado por" type="0">
+		<element name="EXTENSION_AUTHOR" text="Oscar Martinez" description="Algorithm created by" type="0">
 		</element>
-		<element name="HELP_AUTHOR" text="Oscar Martinez" description="Ayuda creada por" type="0">
+		<element name="HELP_AUTHOR" text="Oscar Martinez" description="Help created by" type="0">
 		</element>
-		<element name="USER_NOTES" text="" description="Notas de usuario" type="0">
+		<element name="USER_NOTES" text="" description="User notes" type="0">
 		</element>
-		<element name="LAYER" text="Capa de entrada" description="" type="3">
+		<element name="LAYER" text="Input layer" description="" type="3">
 		</element>
-		<element name="PROPORTIONX" text="Proporcion del tamaño de la grafica en el eje X" description="" type="3">
+		<element name="PROPORTIONX" text="Proportion in X" description="" type="3">
 		</element>
-                <element name="PROPORTIONY" text="Proporcion del tamaño de la grafica en el eje Y" description="" type="3">
+                <element name="PROPORTIONY" text="Propotion in Y" description="" type="3">
 		</element>
-		<element name="FIELDHOUR" text="Campo hora" description="" type="3">
+		<element name="FIELDDAY" text="Day field" description="" type="3">
 		</element>
-		<element name="PATTERNHOUR" text="Patron del campo hora, solo en caso de que sea de tipo texto." description="" type="3">
+                <element name="FIELDHOUR" text="Hour field" description="" type="3">
 		</element>
-		<element name="FIELDDAY" text="Campo dia" description="" type="3">
-		</element>
-		<element name="PATTERNDAY" text="Patron del campo dia, solo en caso de que sea de tipo texto" description="" type="3">
-		</element>
-		<element name="FILTEREXPRESSION" text="Expresion de filtrado de la capa de entrada" description="" type="3"></element>
+		<element name="FILTEREXPRESSION" text="Filter expression for input layer" description="" type="3"></element>
 	</help>
 <?xml version='1.0' encoding='ISO-8859-1' standalone='yes' ?>
