@@ -75,7 +75,7 @@ def aoristicClockGrid(store,
   ###
   if store.getSelection().getSize()!=0:
     fset = store.getSelection()
-  elif expression.getPhrase() != '':
+  elif (expression!=None and not expression.isEmpty()):
     evaluator = DALLocator.getDataManager().createExpresion(expression)
     #evaluator = expressionEvaluatorManager.createEvaluator(expression)
     fq = store.createFeatureQuery()
